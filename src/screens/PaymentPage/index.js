@@ -11,20 +11,19 @@ import {
   lightTheme,
   darkTheme,
 } from "../../context/themeContext";
-import {
-  usePremiumContext
-} from "../../context/premiumContext";
+import { usePremiumContext } from "../../context/premiumContext";
 
-function PaymentPage({paymentHandler}) {
+function PaymentPage({ paymentHandler }) {
   const { selectedTheme } = useThemeContext();
   const { postPremium } = usePremiumContext();
   const theme = selectedTheme === "light_theme" ? lightTheme : darkTheme;
+  const [isConfirmed, setIsConfirmed] = React.useState(false);
 
   const styles = StyleSheet.create({
     container: {
       height: "100%",
       alignItems: "center",
-      backgroundColor: theme.backgroundColor
+      backgroundColor: theme.backgroundColor,
     },
     input: {
       width: "80%",
@@ -35,7 +34,7 @@ function PaymentPage({paymentHandler}) {
       borderColor: "#ccc",
       borderWidth: 1,
       fontSize: 16,
-      margin: 10
+      margin: 10,
     },
     textStyle: {
       marginTop: 50,
@@ -87,47 +86,61 @@ function PaymentPage({paymentHandler}) {
     },
   });
 
-  onSubmitForm = async () =>{
+  onSubmitForm = async () => {
     try {
       postPremium();
+
+      setTimeout(() => {
+        paymentHandler();
+      }, 1000);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.textStyle}>Valor Total: R$10,45</Text>
-      <Text >Nome:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder={"Nome Completo"}
-        secureTextEntry={false}
-      />
-      <Text >CPF:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder={"CPF"}
-        secureTextEntry={false}
-        keyboardType={'numeric'}
-        maxLength={11}
-      />
-      <Text >Número do Cartão:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder={"Número do Cartão"}
-        secureTextEntry={false}
-        keyboardType={'numeric'}
-        maxLength={16}
-      />  
-      <TouchableOpacity style={styles.cancelButtonStyle} onPress={paymentHandler} >
-          <Text style={styles.buttonText}>Cancelar</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.buttonStyle} onPress={onSubmitForm}>
-          <Text style={styles.buttonText}>Confirmar</Text>
-      </TouchableOpacity>
+      {isConfirmed ? (
+        <View>
+          <Text>OI</Text>
+        </View>
+      ) : (
+        <View>
+          <Text style={styles.textStyle}>Valor Total: R$10,45</Text>
+          <Text>Nome:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder={"Nome Completo"}
+            secureTextEntry={false}
+          />
+          <Text>CPF:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder={"CPF"}
+            secureTextEntry={false}
+            keyboardType={"numeric"}
+            maxLength={11}
+          />
+          <Text>Número do Cartão:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder={"Número do Cartão"}
+            secureTextEntry={false}
+            keyboardType={"numeric"}
+            maxLength={16}
+          />
+          <TouchableOpacity
+            style={styles.cancelButtonStyle}
+            onPress={paymentHandler}
+          >
+            <Text style={styles.buttonText}>Cancelar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonStyle} onPress={onSubmitForm}>
+            <Text style={styles.buttonText}>Confirmar</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
-  
   );
 }
 

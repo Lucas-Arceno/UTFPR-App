@@ -38,6 +38,29 @@ function Options({ isLogged, setAuth }) {
     setAuth(false);
   };
 
+  const styles = StyleSheet.create({
+    buttonStyle: {
+      backgroundColor: theme.secondColor,
+      marginTop: 40,
+      paddingVertical: 12,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      elevation: 3, // Sombra no Android
+      shadowColor: "#000", // Sombra no iOS
+      shadowOpacity: 0.3, // Sombra no iOS
+      shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
+      shadowRadius: 3, // Sombra no iOS
+      width: 180,
+      height: 50,
+      alignItems: "center",
+    },
+    buttonOptionsText: {
+      color: "#fff",
+      fontSize: 16,
+      fontWeight: "bold",
+    },
+  });
+
   return isPaymentOpen ? (
     <PaymentPage paymentHandler={openPaymentHandler}></PaymentPage>
   ) : (
@@ -62,21 +85,7 @@ function Options({ isLogged, setAuth }) {
       </Text>
 
       <TouchableOpacity
-        style={{
-          backgroundColor: theme.secondColor,
-          marginTop: 40,
-          paddingVertical: 12,
-          paddingHorizontal: 24,
-          borderRadius: 8,
-          elevation: 3, // Sombra no Android
-          shadowColor: "#000", // Sombra no iOS
-          shadowOpacity: 0.3, // Sombra no iOS
-          shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
-          shadowRadius: 3, // Sombra no iOS
-          width: 180,
-          height: 50,
-          alignItems: "center",
-        }}
+        style={styles.buttonStyle}
         onPress={setSelectedThemeHandler}
       >
         <Text style={styles.buttonOptionsText}>MUDAR TEMA</Text>
@@ -85,21 +94,7 @@ function Options({ isLogged, setAuth }) {
       {isLogged == "1" ? (
         <View>
           <TouchableOpacity
-            style={{
-              backgroundColor: theme.secondColor,
-              marginTop: 40,
-              paddingVertical: 12,
-              paddingHorizontal: 24,
-              borderRadius: 8,
-              elevation: 3, // Sombra no Android
-              shadowColor: "#000", // Sombra no iOS
-              shadowOpacity: 0.3, // Sombra no iOS
-              shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
-              shadowRadius: 3, // Sombra no iOS
-              width: 180,
-              height: 50,
-              alignItems: "center",
-            }}
+            style={styles.buttonStyle}
             onPress={openPaymentHandler}
           >
             <Text style={styles.buttonOptionsText}>INSCRIÇÃO</Text>
@@ -125,24 +120,7 @@ function Options({ isLogged, setAuth }) {
             <Text style={styles.buttonOptionsText}>EXCLUIR CONTA</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#b5353d",
-              marginTop: 40,
-              paddingVertical: 12,
-              paddingHorizontal: 24,
-              borderRadius: 8,
-              elevation: 3, // Sombra no Android
-              shadowColor: "#000", // Sombra no iOS
-              shadowOpacity: 0.3, // Sombra no iOS
-              shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
-              shadowRadius: 3, // Sombra no iOS
-              width: 180,
-              height: 50,
-              alignItems: "center",
-            }}
-            onPress={onLogout}
-          >
+          <TouchableOpacity style={styles.buttonStyle} onPress={onLogout}>
             <Text style={styles.buttonOptionsText}>LOGOUT</Text>
           </TouchableOpacity>
         </View>
@@ -152,13 +130,5 @@ function Options({ isLogged, setAuth }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  buttonOptionsText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-});
 
 export default Options;
