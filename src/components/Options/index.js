@@ -26,12 +26,16 @@ function Options({ isLogged, setAuth }) {
 
   const openPaymentHandler = async () => {
     const aux = await getPremium();
-    if (aux.is_premium === null) {
+    if (aux.is_premium === null || aux.is_premium === false) {
       setIsPaymentOpen(!isPaymentOpen);
     } else {
       Alert.alert("Usuário ja é Premium");
     }
   };
+
+  const closePaymentHandler = () =>{
+    setIsPaymentOpen(false);
+  }
 
   const onLogout = async () => {
     await removeItemValue("token");
@@ -62,7 +66,7 @@ function Options({ isLogged, setAuth }) {
   });
 
   return isPaymentOpen ? (
-    <PaymentPage paymentHandler={openPaymentHandler}></PaymentPage>
+    <PaymentPage paymentHandler={closePaymentHandler}></PaymentPage>
   ) : (
     <View
       style={{

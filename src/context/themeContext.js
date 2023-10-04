@@ -26,7 +26,6 @@ export const ThemeContextProvider = ({ children }) => {
     try {
       await AsyncStorage.setItem("theme", theme);
       setSelectedTheme(theme);
-      console.log(theme);
     } catch (e) {
       console.log(e.message);
     }
@@ -54,7 +53,6 @@ export const ThemeContextProvider = ({ children }) => {
   useEffect(() => {
     retrieveTheme().then(theme => {
       if (theme) {
-        console.log(theme);
         setSelectedTheme(theme);
       }
     });

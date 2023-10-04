@@ -89,9 +89,10 @@ function PaymentPage({ paymentHandler }) {
   onSubmitForm = async () => {
     try {
       postPremium();
-
+      setIsConfirmed(true);
       setTimeout(() => {
         paymentHandler();
+        console.log("teste");
       }, 1000);
     } catch (error) {
       console.log(error);
@@ -105,7 +106,7 @@ function PaymentPage({ paymentHandler }) {
           <Text>OI</Text>
         </View>
       ) : (
-        <View>
+        <View style={styles.container}>
           <Text style={styles.textStyle}>Valor Total: R$10,45</Text>
           <Text>Nome:</Text>
           <TextInput
@@ -131,7 +132,7 @@ function PaymentPage({ paymentHandler }) {
           />
           <TouchableOpacity
             style={styles.cancelButtonStyle}
-            onPress={paymentHandler}
+            onPress={() => {paymentHandler()}}
           >
             <Text style={styles.buttonText}>Cancelar</Text>
           </TouchableOpacity>
