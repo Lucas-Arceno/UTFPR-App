@@ -29,8 +29,21 @@ export const PremiumContextProvider = ({ children }) => {
     }
   };
 
+  const postPremium = async () => {
+    try {
+      const token_ = await getData();
+      const response = await fetch("http://10.0.2.2:5000/dashboard/postPremium", {
+        method: "POST",
+        headers: { "Content-type": "application/json", token: token_ },
+      });
+      console.log(response);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
   return (
-    <premiumContext.Provider value={{ getPremium }}>
+    <premiumContext.Provider value={{ getPremium, postPremium }}>
       {children}
     </premiumContext.Provider>
   );

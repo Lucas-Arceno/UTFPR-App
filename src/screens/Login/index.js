@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   View,
   Text,
-  Vibration,
   StyleSheet,
 } from "react-native";
 import * as Haptics from "expo-haptics";

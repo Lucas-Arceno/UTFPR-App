@@ -17,7 +17,7 @@ import {
 
 function PaymentPage({paymentHandler}) {
   const { selectedTheme } = useThemeContext();
-  const { getPremium } = usePremiumContext();
+  const { postPremium } = usePremiumContext();
   const theme = selectedTheme === "light_theme" ? lightTheme : darkTheme;
 
   const styles = StyleSheet.create({
@@ -89,7 +89,7 @@ function PaymentPage({paymentHandler}) {
 
   onSubmitForm = async () =>{
     try {
-      getPremium();
+      postPremium();
     } catch (error) {
       console.log(error)
     }
@@ -120,14 +120,6 @@ function PaymentPage({paymentHandler}) {
         keyboardType={'numeric'}
         maxLength={16}
       />  
-      <Text >Telefone:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder={"Telefone"}
-        secureTextEntry={false}
-        keyboardType={'numeric'}
-        maxLength={16}
-      />
       <TouchableOpacity style={styles.cancelButtonStyle} onPress={paymentHandler} >
           <Text style={styles.buttonText}>Cancelar</Text>
       </TouchableOpacity>
