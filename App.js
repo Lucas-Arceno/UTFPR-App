@@ -49,8 +49,6 @@ function App() {
     isAuth();
   });
 
-  //TESTE
-
   return (
     <ThemeContextProvider>
       <PremiumContextProvider>

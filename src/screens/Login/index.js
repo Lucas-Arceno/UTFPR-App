@@ -66,18 +66,6 @@ function Login({ navigation, setAuth }) {
     },
   });
 
-  React.useEffect(() => {
-    console.log("Teste");
-  }, [retrieveTheme]);
-
-  const retrieveTheme = async () => {
-    try {
-      const theme = await AsyncStorage.getItem("theme");
-      return theme;
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
   const storeToken = async (value) => {
     try {
@@ -100,7 +88,8 @@ function Login({ navigation, setAuth }) {
       });
 
       const parseRes = await response.json();
-      if (parseRes === "Missing Credentials" || parseRes === "Invalid Email") {
+      if (parseRes === "Missing Credentials" || parseRes === "Invalid Email" || parseRes === "Password or Email is incorrect!") {
+        ///AO ERRAR A SENHA LIMPAR OS CAMPOS E SINALIZAR SENHA ERRADA!.
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
       } else {
         storeToken(parseRes);

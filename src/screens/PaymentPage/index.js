@@ -92,7 +92,6 @@ function PaymentPage({ paymentHandler }) {
       setIsConfirmed(true);
       setTimeout(() => {
         paymentHandler();
-        console.log("teste");
       }, 1000);
     } catch (error) {
       console.log(error);
