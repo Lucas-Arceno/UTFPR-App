@@ -5,6 +5,7 @@ import {
   TextInput,
   View,
   StyleSheet,
+  Vibration
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -41,8 +42,13 @@ function Register({ navigation, setAuth }) {
       });
 
       const parseRes = await response.json();
-      storeToken(parseRes.token);
-      setAuth(true);
+      console.log(parseRes);
+      if(parseRes === "Missing Credentials" || parseRes === "Invalid Email" ){
+        Vibration.vibrate();
+      }else{
+        storeToken(parseRes.token);
+        setAuth(true);
+      }
     } catch (err) {
       console.log(err);
     }

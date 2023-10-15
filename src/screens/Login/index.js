@@ -5,8 +5,8 @@ import {
   View,
   Text,
   StyleSheet,
+  Vibration
 } from "react-native";
-import * as Haptics from "expo-haptics";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "../../components/Header";
 import {
@@ -89,8 +89,7 @@ function Login({ navigation, setAuth }) {
 
       const parseRes = await response.json();
       if (parseRes === "Missing Credentials" || parseRes === "Invalid Email" || parseRes === "Password or Email is incorrect!") {
-        ///AO ERRAR A SENHA LIMPAR OS CAMPOS E SINALIZAR SENHA ERRADA!.
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+        Vibration.vibrate();
       } else {
         storeToken(parseRes);
         setAuth(true);
@@ -128,6 +127,9 @@ function Login({ navigation, setAuth }) {
           onPress={() => navigation.navigate("Register")}
         >
           <Text style={styles.buttonText}>Register</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonStyle} onPress={() => Vibration.vibrate()}>
+            <Text>Vibrate</Text>
         </TouchableOpacity>
       </View>
     </>
