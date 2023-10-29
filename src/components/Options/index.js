@@ -49,6 +49,9 @@ function Options({ isLogged, setAuth }) {
   const deleteAccount = async () => {
     try {
       const token_ = await getData();
+      await removeItemValue("token");
+      setAuth(false);
+      console.log("EXCLUIU A CONTA1");
       const response = await fetch(
         "http://10.0.2.2:5000/dashboard/deleteAccount",
         {
@@ -56,9 +59,6 @@ function Options({ isLogged, setAuth }) {
           headers: { "Content-type": "application/json", token: token_ },
         }
       );
-      await removeItemValue("token");
-      setAuth(false);
-      console.log(response);
     } catch (err) {
       console.log(err.message);
     }
@@ -223,7 +223,7 @@ function Options({ isLogged, setAuth }) {
             onChangeText={setPassword}
           />
 
-          <TouchableOpacity style={styles.buttonStyle} onPress={deleteAccount}>
+          <TouchableOpacity style={styles.buttonStyle} onPress={async () => { await deleteAccount();}}>
             <Text style={styles.buttonOptionsText}>Excluir</Text>
           </TouchableOpacity>
           <TouchableOpacity

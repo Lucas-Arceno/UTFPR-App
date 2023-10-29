@@ -129,7 +129,7 @@ function Login({ navigation, setAuth }) {
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonStyle} onPress={() => Vibration.vibrate()}>
-            <Text>Vibrate</Text>
+            <Text style={styles.buttonText}>Vibrate</Text>
         </TouchableOpacity>
       </View>
     </>
