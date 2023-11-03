@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Modal,
   Alert,
+  Image,
 } from "react-native";
 import materias from "./groups.json";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,8 +16,10 @@ import {
   lightTheme,
   darkTheme,
 } from "../../context/themeContext";
+import { captureRef } from "react-native-view-shot";
+import * as Sharing from 'expo-sharing';
 
-const TableComponent = ({ navigation, route = {}, fileMateria_ = []}) => {
+const TableComponent = ({ navigation, route = {}, fileMateria_ = [] }) => {
   /////////////////// VARIAVEIS E ARRAYS //////////////////////
   const [optionGrade, setOptionGrade] = useState("1");
   const [isSaving, setIsSaving] = useState(false);
@@ -78,7 +81,7 @@ const TableComponent = ({ navigation, route = {}, fileMateria_ = []}) => {
         {
           method: "POST",
           headers: { "Content-type": "application/json", token: token_ },
-          body: (JSON.stringify(body)),
+          body: JSON.stringify(body),
         }
       );
       console.log(response);
@@ -90,7 +93,7 @@ const TableComponent = ({ navigation, route = {}, fileMateria_ = []}) => {
   /////////////////// COMEÇO DAS FUNÇÕES //////////////////////
 
   const handleSave = () => {
-    if(isSaving == true){
+    if (isSaving == true) {
       console.log(optionGrade);
       postGrade(optionGrade);
     }
@@ -231,16 +234,136 @@ const TableComponent = ({ navigation, route = {}, fileMateria_ = []}) => {
     setOptionGrade(option);
   };
 
-
-  //////////////////// FIM DAS FUNÇÕES //////////////////////
-
-  return (
-    <View style={{
+  const styles = StyleSheet.create({
+    snapshotStyle:{
+      width: 400,
+      height: 200,
+    },
+    imageStyle: {
+      flex: 1,
+      width: "100%",
+      height: "100%",
+    },
+    container: {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
       backgroundColor: theme.backgroundColor,
-    }}>
+    },
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    tableContainer: {
+      marginTop: 50, // Ajuste o valor para posicionar a tabela para baixo
+    },
+    table: {
+      flexDirection: "column",
+    },
+    row: {
+      flexDirection: "row",
+    },
+    cell: {
+      width: 60,
+      height: 30,
+      borderWidth: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "white",
+    },
+    buttonText: {
+      color: "#fff",
+      fontSize: 16,
+      fontWeight: "bold",
+    },
+    buttonModal: {
+      marginTop: 5,
+      marginHorizontal: 50,
+      backgroundColor: "rgba(52, 152, 219, 0.9)",
+      paddingVertical: 12,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      elevation: 3, // Sombra no Android
+      shadowColor: "#000", // Sombra no iOS
+      shadowOpacity: 0.3, // Sombra no iOS
+      shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
+      shadowRadius: 3, // Sombra no iOS
+    },
+    buttonModalSelected: {
+      marginTop: 5,
+      marginHorizontal: 50,
+      backgroundColor: "rgba(50,205,50,0.8)",
+      paddingVertical: 12,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      elevation: 3, // Sombra no Android
+      shadowColor: "#000", // Sombra no iOS
+      shadowOpacity: 0.3, // Sombra no iOS
+      shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
+      shadowRadius: 3, // Sombra no iOS
+    },
+    buttonModalClose: {
+      marginTop: 5,
+      marginHorizontal: 50,
+      backgroundColor: "rgba(225, 51, 51, 0.9)",
+      paddingVertical: 12,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      elevation: 3, // Sombra no Android
+      shadowColor: "#000", // Sombra no iOS
+      shadowOpacity: 0.3, // Sombra no iOS
+      shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
+      shadowRadius: 3, // Sombra no iOS
+    },
+    title: {
+      fontFamily: "sans-serif-condensed",
+      textAlign: "center",
+      fontSize: 25,
+    },
+    touchableOpacity: {
+      marginTop: 15,
+      backgroundColor: theme.secondColor,
+      paddingVertical: 12,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      elevation: 3, // Sombra no Android
+      shadowColor: "#000", // Sombra no iOS
+      shadowOpacity: 0.3, // Sombra no iOS
+      shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
+      shadowRadius: 3, // Sombra no iOS
+    },
+    shareButton: {
+      height: 50,
+      width: 50,
+      borderRadius: 10,
+      marginTop: 15,
+      marginLeft: 20,
+    },
+  });
+
+  const snapshot = React.useRef();
+  const [snapshotImg, setSnapshotImg] = React.useState();
+
+  const getPrintScreen = async () => {
+    const result = await captureRef(snapshot);
+    setSnapshotImg(result);
+    if (result) {
+      try {
+        await Sharing.shareAsync(result, {
+          mimeType: 'image/png',
+          dialogTitle: 'Compartilhar imagem',
+        });
+      } catch (error) {
+        console.error('Erro ao compartilhar:', error);
+      }
+    }
+  };
+  
+
+  //////////////////// FIM DAS FUNÇÕES //////////////////////
+
+  return (
+    <View style={styles.container} ref={snapshot}>
       {isSaving ? (
         <View>
           <Text style={styles.title}>ESCOLHA EM QUAL QUER SALVAR</Text>
@@ -317,35 +440,7 @@ const TableComponent = ({ navigation, route = {}, fileMateria_ = []}) => {
       {!isAdding ? (
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={{
-              marginTop: 15,
-              backgroundColor: theme.secondColor,
-              paddingVertical: 12,
-              paddingHorizontal: 24,
-              borderRadius: 8,
-              elevation: 3, // Sombra no Android
-              shadowColor: "#000", // Sombra no iOS
-              shadowOpacity: 0.3, // Sombra no iOS
-              shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
-              shadowRadius: 3, // Sombra no iOS
-            }}
-            onPress={() => navigation.navigate("Dashboard")}
-          >
-            <Text style={styles.buttonText}>VOLTAR</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              marginTop: 15,
-              backgroundColor: theme.secondColor,
-              paddingVertical: 12,
-              paddingHorizontal: 24,
-              borderRadius: 8,
-              elevation: 3, // Sombra no Android
-              shadowColor: "#000", // Sombra no iOS
-              shadowOpacity: 0.3, // Sombra no iOS
-              shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
-              shadowRadius: 3, // Sombra no iOS
-            }}
+            style={styles.touchableOpacity}
             onPress={() => {
               handleSave();
             }}
@@ -355,20 +450,23 @@ const TableComponent = ({ navigation, route = {}, fileMateria_ = []}) => {
           {isSaving ? (
             <Text></Text>
           ) : (
-            <TouchableOpacity style={{
-              marginTop: 15,
-              backgroundColor: theme.secondColor,
-              paddingVertical: 12,
-              paddingHorizontal: 24,
-              borderRadius: 8,
-              elevation: 3, // Sombra no Android
-              shadowColor: "#000", // Sombra no iOS
-              shadowOpacity: 0.3, // Sombra no iOS
-              shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
-              shadowRadius: 3, // Sombra no iOS
-            }} onPress={handleAdding}>
-              <Text style={styles.buttonText}>ADICIONAR</Text>
-            </TouchableOpacity>
+            <>
+              <TouchableOpacity
+                style={styles.touchableOpacity}
+                onPress={handleAdding}
+              >
+                <Text style={styles.buttonText}>ADICIONAR</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={getPrintScreen}
+                style={styles.shareButton}
+              >
+                <Image
+                  style={styles.imageStyle}
+                  source={require("./share.png")}
+                ></Image>
+              </TouchableOpacity>
+            </>
           )}
         </View>
       ) : (
@@ -391,81 +489,14 @@ const TableComponent = ({ navigation, route = {}, fileMateria_ = []}) => {
           <View style={styles.modalContainer}>{renderizarBotoes()}</View>
         </ScrollView>
       </Modal>
+      <TouchableOpacity
+        style={styles.touchableOpacity}
+        onPress={() => navigation.navigate("Dashboard")}
+      >
+        <Text style={styles.buttonText}>Voltar</Text>
+      </TouchableOpacity>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  tableContainer: {
-    marginTop: 50, // Ajuste o valor para posicionar a tabela para baixo
-  },
-  table: {
-    flexDirection: "column",
-  },
-  row: {
-    flexDirection: "row",
-  },
-  cell: {
-    width: 60,
-    height: 30,
-    borderWidth: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  buttonModal: {
-    marginTop: 5,
-    marginHorizontal: 50,
-    backgroundColor: "rgba(52, 152, 219, 0.9)",
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    elevation: 3, // Sombra no Android
-    shadowColor: "#000", // Sombra no iOS
-    shadowOpacity: 0.3, // Sombra no iOS
-    shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
-    shadowRadius: 3, // Sombra no iOS
-  },
-  buttonModalSelected: {
-    marginTop: 5,
-    marginHorizontal: 50,
-    backgroundColor: "rgba(50,205,50,0.8)",
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    elevation: 3, // Sombra no Android
-    shadowColor: "#000", // Sombra no iOS
-    shadowOpacity: 0.3, // Sombra no iOS
-    shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
-    shadowRadius: 3, // Sombra no iOS
-  },
-  buttonModalClose: {
-    marginTop: 5,
-    marginHorizontal: 50,
-    backgroundColor: "rgba(225, 51, 51, 0.9)",
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    elevation: 3, // Sombra no Android
-    shadowColor: "#000", // Sombra no iOS
-    shadowOpacity: 0.3, // Sombra no iOS
-    shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
-    shadowRadius: 3, // Sombra no iOS
-  },
-  title: {
-    fontFamily: "sans-serif-condensed",
-    textAlign: "center",
-    fontSize: 25,
-  },
-});
 
 export default TableComponent;

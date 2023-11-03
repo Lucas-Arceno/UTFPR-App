@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Image, TouchableOpacity, Text, View, StyleSheet } from "react-native";
+import { TouchableOpacity, Text, View, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Calendar from "../../components/Calendar";
 import {
@@ -7,10 +7,13 @@ import {
   lightTheme,
   darkTheme,
 } from "../../context/themeContext";
+import { usePremiumContext } from "../../context/premiumContext";
 
 function GradesSalvas({ navigation, route }) {
+  const { getPremium } = usePremiumContext();
   const [fileMaterias, setFileMaterias] = React.useState([]);
   const [isReady, setIsReady] = React.useState(false);
+  const [isPremium, setIsPremium] = React.useState(false);
 
   const { selectedTheme } = useThemeContext();
   const theme = selectedTheme === "light_theme" ? lightTheme : darkTheme;
@@ -21,11 +24,6 @@ function GradesSalvas({ navigation, route }) {
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: theme.backgroundColor,
-    },
-    imageStyle: {
-      flex: 1,
-      width: "100%",
-      height: "100%"
     },
     buttonStyle: {
       marginTop: 15,
@@ -48,9 +46,9 @@ function GradesSalvas({ navigation, route }) {
       textAlign: "center",
     },
     subContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between', 
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
     },
     backButtonStyle: {
       marginTop: 45,
@@ -66,13 +64,6 @@ function GradesSalvas({ navigation, route }) {
       width: 150,
       height: 50,
     },
-    shareButton: {
-      height: 50,
-      width: 50,
-      borderRadius: 10,
-      marginTop: 15,
-      marginLeft: 20,
-    }
   });
 
   const getData = async () => {
@@ -146,6 +137,18 @@ function GradesSalvas({ navigation, route }) {
   }
 
   React.useEffect(() => {
+    async function premiumVerify() {
+      aux = await getPremium();
+      if (aux.is_premium === null || aux.is_premium === false) {
+        setIsPremium(false);
+      } else {
+        setIsPremium(true);
+      }
+    }
+    premiumVerify();
+  }, []);
+
+  React.useEffect(() => {
     console.log("File Materias Atualizado:", fileMaterias);
   }, [fileMaterias]);
 
@@ -188,10 +191,7 @@ function GradesSalvas({ navigation, route }) {
             >
               <Text style={styles.buttonText}>Grade 1</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.shareButton}>
-              <Image style={styles.imageStyle} source={require('./share.png')}></Image>
-            </TouchableOpacity>
-          </View>   
+          </View>
           <View style={styles.subContainer}>
             <TouchableOpacity
               onPress={() => {
@@ -201,31 +201,31 @@ function GradesSalvas({ navigation, route }) {
             >
               <Text style={styles.buttonText}>Grade 2</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.shareButton}>
-              <Image style={styles.imageStyle} source={require('./share.png')}></Image>
-            </TouchableOpacity>
           </View>
           <View style={styles.subContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                handleClick(3);
-              }}
-              style={styles.buttonStyle}
-            >
-              <Text style={styles.buttonText}>Grade 3</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.shareButton}>
-              <Image style={styles.imageStyle} source={require('./share.png')}></Image>
-            </TouchableOpacity>
+            {isPremium ? (
+              <>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleClick(3);
+                  }}
+                  style={styles.buttonStyle}
+                >
+                  <Text style={styles.buttonText}>Grade 3</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <></>
+            )}
           </View>
+          <TouchableOpacity
+            style={styles.buttonStyle}
+            onPress={() => navigation.navigate("Dashboard")}
+          >
+            <Text style={styles.buttonText}>Voltar</Text>
+          </TouchableOpacity>
         </View>
       )}
-      <TouchableOpacity
-        style={styles.backButtonStyle}
-        onPress={() => navigation.navigate("Dashboard")}
-      >
-        <Text style={styles.buttonText}>Voltar</Text>
-      </TouchableOpacity>
     </View>
   );
 }
