@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["VIBRATE"]
+      "permissions": ["VIBRATE", "light-sensor"]
     },
     "web": {
       "favicon": "./assets/favicon.png"

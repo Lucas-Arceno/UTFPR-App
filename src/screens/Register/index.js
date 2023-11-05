@@ -5,7 +5,7 @@ import {
   TextInput,
   View,
   StyleSheet,
-  Vibration
+  Vibration,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -30,6 +30,43 @@ function Register({ navigation, setAuth }) {
     }
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      backgroundColor: theme.backgroundColor,
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    input: {
+      width: "80%",
+      height: 40,
+      backgroundColor: "#fff",
+      paddingHorizontal: 15,
+      borderRadius: 8,
+      borderColor: "#ccc",
+      borderWidth: 1,
+      fontSize: 16,
+    },
+    buttonText: {
+      color: "#fff",
+      fontSize: 16,
+      fontWeight: "bold",
+    },
+    buttonStyle: {
+      backgroundColor: theme.secondColor,
+      paddingVertical: 12,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      elevation: 3, // Sombra no Android
+      shadowColor: "#000", // Sombra no iOS
+      shadowOpacity: 0.3, // Sombra no iOS
+      shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
+      shadowRadius: 3, // Sombra no iOS
+      marginTop: 25,
+      width: 100,
+    }
+  });
+
   onSubmitForm = async () => {
     try {
       const body = { email, password, name };
@@ -43,9 +80,9 @@ function Register({ navigation, setAuth }) {
 
       const parseRes = await response.json();
       console.log(parseRes);
-      if(parseRes === "Missing Credentials" || parseRes === "Invalid Email" ){
+      if (parseRes === "Missing Credentials" || parseRes === "Invalid Email") {
         Vibration.vibrate();
-      }else{
+      } else {
         storeToken(parseRes.token);
         setAuth(true);
       }
@@ -55,7 +92,9 @@ function Register({ navigation, setAuth }) {
   };
 
   return (
-    <View style={{ backgroundColor: theme.backgroundColor, flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View
+      style={styles.container}
+    >
       <TextInput
         style={styles.input}
         value={email}
@@ -78,38 +117,14 @@ function Register({ navigation, setAuth }) {
         onChangeText={setPassword}
       />
       <TouchableOpacity
-        style={{
-          backgroundColor: theme.secondColor  ,
-          paddingVertical: 12,
-          paddingHorizontal: 24,
-          borderRadius: 8,
-          elevation: 3, // Sombra no Android
-          shadowColor: "#000", // Sombra no iOS
-          shadowOpacity: 0.3, // Sombra no iOS
-          shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
-          shadowRadius: 3, // Sombra no iOS
-          marginTop: 25,
-          width: 100
-        }}
+        style={styles.buttonStyle}
         onPress={onSubmitForm}
       >
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={{
-          backgroundColor: theme.secondColor  ,
-          paddingVertical: 12,
-          paddingHorizontal: 24,
-          borderRadius: 8,
-          elevation: 3, // Sombra no Android
-          shadowColor: "#000", // Sombra no iOS
-          shadowOpacity: 0.3, // Sombra no iOS
-          shadowOffset: { width: 2, height: 2 }, // Sombra no iOS
-          shadowRadius: 3, // Sombra no iOS
-          width: 100,
-          marginTop: 25
-        }}
-        onPress={()=>navigation.navigate("Login")}
+        style={styles.buttonStyle}
+        onPress={() => navigation.navigate("Login")}
       >
         <Text style={styles.buttonText}>Voltar</Text>
       </TouchableOpacity>
@@ -117,22 +132,5 @@ function Register({ navigation, setAuth }) {
   );
 }
 
-const styles = StyleSheet.create({
-  input: {
-    width: "80%",
-    height: 40,
-    backgroundColor: "#fff",
-    paddingHorizontal: 15,
-    borderRadius: 8,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    fontSize: 16,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-});
 
 export default Register;

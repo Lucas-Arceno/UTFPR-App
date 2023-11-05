@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./src/screens/Login";
@@ -9,6 +9,8 @@ import Calendar from "./src/components/Calendar";
 import GradesSalvas from "./src/screens/GradesSalvas";
 import { ThemeContextProvider } from "./src/context/themeContext";
 import { PremiumContextProvider } from "./src/context/premiumContext";
+import { LightSensor } from "expo-sensors";
+import * as Brightness from 'expo-brightness';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +20,21 @@ function App() {
   const setAuth = (boolean) => {
     setIsAuthenticated(boolean);
   };
+
+  React.useEffect(() => {
+    (async () => {
+      const { status } = await Brightness.requestPermissionsAsync();
+      if (status === 'granted') {
+        if(illuminance < 1000){
+          Brightness.setSystemBrightnessAsync(1);
+        }else{
+          console.log("teste")
+          Brightness.setSystemBrightnessAsync(0.1);
+        }
+      }
+    })();
+  }, [illuminance]);
+
 
   const getData = async () => {
     try {
@@ -48,6 +65,47 @@ function App() {
   React.useEffect(() => {
     isAuth();
   });
+
+  const [illuminance, setIlluminance] = useState(0);
+
+  React.useEffect(() => {
+    const toggle = () => {
+      if (subscription) {
+        unsubscribe();
+      } else {
+        subscribe();
+      }
+    };
+
+    const subscribe = () => {
+      subscription = LightSensor.addListener(data => {
+        setIlluminance(data.illuminance);
+      });
+    };
+
+    const unsubscribe = () => {
+      if (subscription) {
+        subscription.remove();
+        subscription = null;
+      }
+    };
+
+    let subscription;
+
+    const intervalId = setInterval(() => {
+      toggle();
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+      unsubscribe();
+    };
+  }, []);
+
+  React.useEffect(() => {
+    console.log(illuminance);
+  }, [illuminance]);
+
 
   return (
     <ThemeContextProvider>
