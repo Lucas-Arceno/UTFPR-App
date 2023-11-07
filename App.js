@@ -21,21 +21,6 @@ function App() {
     setIsAuthenticated(boolean);
   };
 
-  React.useEffect(() => {
-    (async () => {
-      const { status } = await Brightness.requestPermissionsAsync();
-      if (status === 'granted') {
-        if(illuminance < 1000){
-          Brightness.setSystemBrightnessAsync(1);
-        }else{
-          console.log("teste")
-          Brightness.setSystemBrightnessAsync(0.1);
-        }
-      }
-    })();
-  }, [illuminance]);
-
-
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem("token");
@@ -101,6 +86,21 @@ function App() {
       unsubscribe();
     };
   }, []);
+
+  React.useEffect(() => {
+    (async () => {
+      const { status } = await Brightness.requestPermissionsAsync();
+      if (status === 'granted') {
+        console.log("granted")
+        if(illuminance < 5000){
+          Brightness.setSystemBrightnessAsync(0.7);
+        }else{
+          Brightness.setSystemBrightnessAsync(1);
+        }
+      }
+    })();
+  }, [illuminance]);
+
 
   React.useEffect(() => {
     console.log(illuminance);

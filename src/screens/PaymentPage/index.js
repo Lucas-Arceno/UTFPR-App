@@ -102,7 +102,6 @@ function PaymentPage({ paymentHandler }) {
     <View style={styles.container}>
       {isConfirmed ? (
         <View>
-          <Text>OI</Text>
         </View>
       ) : (
         <View style={styles.container}>

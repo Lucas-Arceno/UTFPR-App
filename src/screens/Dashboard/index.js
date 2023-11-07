@@ -44,15 +44,6 @@ function Dashboard({ navigation, setAuth }) {
 
   React.useEffect(() => {
     getName();
-    async function checkIsPremium() {
-      const aux = await getPremium();
-      if (aux.is_premium === null || aux.is_premium === false) {
-        setIsPremium(false);
-      } else {
-        setIsPremium(true);
-      }
-    }
-    checkIsPremium();
   }, []);
 
   const styles = StyleSheet.create({
@@ -91,6 +82,25 @@ function Dashboard({ navigation, setAuth }) {
       height: 100,
     },
   });
+
+  React.useEffect(() => {
+    async function checkIsPremium() {
+      const aux = await getPremium();
+      if (aux.is_premium === null || aux.is_premium === false) {
+        setIsPremium(false);
+      } else {
+        setIsPremium(true);
+      }
+    }
+
+    checkIsPremium(); 
+
+    const intervalId = setInterval(checkIsPremium, 10000); 
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   return (
     <>
